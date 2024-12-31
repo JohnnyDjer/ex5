@@ -1,3 +1,10 @@
+/******************
+Name: Jonathan Djerassi    
+ID: 303013098
+Assignment: ex5
+*******************/
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -54,10 +61,10 @@ void mainMenu() {
 
     while (1) {
         printf("Please Choose:\n");
-        printf("1. Watch playlists\n");
-        printf("2. Add playlist\n");
-        printf("3. Remove playlist\n");
-        printf("4. exit\n");
+        printf("    1. Watch playlists\n");
+        printf("    2. Add playlist\n");
+        printf("    3. Remove playlist\n");
+        printf("    4. exit\n");
         scanf("%d", &choice);
         getchar(); // Clear newline
 
@@ -165,7 +172,7 @@ void playlistMenu(Playlist *playlist, Playlist **playlists, int playlistCount) {
         printf("    3. Delete Song\n");
         printf("    4. Sort\n");
         printf("    5. Play\n");
-        printf("    6. Back\n");
+        printf("    6. exit\n");
         scanf("%d", &choice);
         getchar(); // Clear newline
 
@@ -181,7 +188,9 @@ void playlistMenu(Playlist *playlist, Playlist **playlists, int playlistCount) {
                 if (playlist->songCount == 0) {
                     printf("No songs to delete.\n");
                 } else {
-                    printf("Choose a song to delete, or 0 to quit: ");
+                    // Display the current playlist before asking for deletion
+                    displayPlaylist(playlist);
+                    printf("choose a song to delete, or 0 to quit: ");
                     int songChoice;
                     scanf("%d", &songChoice);
                     getchar(); // Clear newline
@@ -194,7 +203,7 @@ void playlistMenu(Playlist *playlist, Playlist **playlists, int playlistCount) {
             break;
             case 4:
                 sortPlaylist(playlist);
-            displayPlaylist(playlist);  // Show sorted playlist
+
                 break;
             case 5:
                 for (int i = 0; i < playlist->songCount; i++) {
@@ -215,20 +224,20 @@ void playlistMenu(Playlist *playlist, Playlist **playlists, int playlistCount) {
 void addSong(Playlist *playlist) {
     char title[256], artist[256], lyrics[1024];
     int year;
-
-    printf("Enter song's title: ");
+    printf("Enter song's details\n");
+    printf("Title:\n");
     fgets(title, sizeof(title), stdin);
     title[strcspn(title, "\n")] = '\0';
 
-    printf("Enter artist: ");
+    printf("Artist:\n");
     fgets(artist, sizeof(artist), stdin);
     artist[strcspn(artist, "\n")] = '\0';
 
-    printf("Enter year of release: ");
+    printf("Year of release:\n");
     scanf("%d", &year);
     getchar(); // Clear newline
 
-    printf("Enter lyrics: ");
+    printf("Lyrics:\n");
     fgets(lyrics, sizeof(lyrics), stdin);
     lyrics[strcspn(lyrics, "\n")] = '\0';
 
@@ -294,10 +303,10 @@ void sortPlaylist(Playlist *playlist) {
     int choice;
     printf("choose:\n");
     printf("1. sort by year\n");
-    printf("2. sort by streams - ascending order)\n");
-    printf("3. sort by streams - descending order)\n");
+    printf("2. sort by streams - ascending order\n");
+    printf("3. sort by streams - descending order\n");
     printf("4. sort alphabetically\n");
-    printf("Enter your choice: ");
+
     scanf("%d", &choice);
     getchar();  // Clear newline
 

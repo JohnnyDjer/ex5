@@ -227,8 +227,9 @@ void displayPlaylists(Playlist **playlists, int playlistCount) {
 
 void playlistMenu(Playlist *playlist, Playlist **playlists, int playlistCount) {
     int choice;
+    printf("playlist %s:\n", playlist->name);
     while (OP) {
-        printf("playlist %s:\n", playlist->name);
+        
         printf("    1. Show Playlist\n");
         printf("    2. Add Song\n");
         printf("    3. Delete Song\n");
@@ -297,24 +298,70 @@ void playlistMenu(Playlist *playlist, Playlist **playlists, int playlistCount) {
 void addSong(Playlist *playlist) {
     char title[256], artist[256], lyrics[1024];
     int year;
+
+    // Prompt and read song title
     printf("Enter song's details\n");
     printf("Title:\n");
-    fgets(title, sizeof(title), stdin);
-    title[strcspn(title, "\n")] = '\0';
 
+    // Clear input buffer before using fgets after scanf
+    while (getchar() != '\n');  // Clear any leftover newline in the buffer
+
+    if (fgets(title, sizeof(title), stdin) == NULL) {
+        printf("Failed to read title.\n");
+        return;
+    }
+    title[strcspn(title, "\n")] = '\0';  // Remove newline character if present
+
+    // Check if title is empty
+    if (strlen(title) == 0) {
+        printf("Title cannot be empty.\n");
+        return;
+    }
+
+    // Read artist name
     printf("Artist:\n");
-    fgets(artist, sizeof(artist), stdin);
-    artist[strcspn(artist, "\n")] = '\0';
+    if (fgets(artist, sizeof(artist), stdin) == NULL) {
+        printf("Failed to read artist.\n");
+        return;
+    }
+    artist[strcspn(artist, "\n")] = '\0';  // Remove newline character if present
 
+    // Check if artist is empty
+    if (strlen(artist) == 0) {
+        printf("Artist cannot be empty.\n");
+        return;
+    }
+
+    // Read release year
     printf("Year of release:\n");
-    scanf("%d", &year);
-    getchar(); // Clear newline
+    if (scanf("%d", &year) != 1) {
+        printf("Invalid input for year.\n");
+        while (getchar() != '\n'); // Clear the buffer
+        return;
+    }
+    getchar();  // Clear newline from input buffer
 
+    // Check for valid year input
+    if (year <= 0) {
+        printf("Invalid year entered.\n");
+        return;
+    }
+
+    // Read lyrics
     printf("Lyrics:\n");
-    fgets(lyrics, sizeof(lyrics), stdin);
-    lyrics[strcspn(lyrics, "\n")] = '\0';
+    if (fgets(lyrics, sizeof(lyrics), stdin) == NULL) {
+        printf("Failed to read lyrics.\n");
+        return;
+    }
+    lyrics[strcspn(lyrics, "\n")] = '\0';  // Remove newline character if present
 
+    // Create song object and add it to playlist
     Song *song = (Song *)malloc(sizeof(Song));
+    if (!song) {
+        printf("Memory allocation failed!\n");
+        return;
+    }
+
     song->title = strdup(title);
     song->artist = strdup(artist);
     song->year = year;
@@ -322,11 +369,22 @@ void addSong(Playlist *playlist) {
     song->lyrics = strdup(lyrics);
     song->index = playlist->songCount;
 
+    // Ensure reallocation of songs array works
     playlist->songs = (Song **)realloc(playlist->songs, (playlist->songCount + 1) * sizeof(Song *));
+    if (!playlist->songs) {
+        printf("Memory allocation failed!\n");
+        free(song->title);
+        free(song->artist);
+        free(song->lyrics);
+        free(song);
+        return;
+    }
+
     playlist->songs[playlist->songCount] = song;
     playlist->songCount++;
-
+    printf("Song added successfully!\n");
 }
+
 
 void displayPlaylist(Playlist *playlist) {
     if (playlist->songCount == 0) {

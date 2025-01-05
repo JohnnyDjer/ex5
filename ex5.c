@@ -249,7 +249,7 @@ void displayPlaylists(Playlist **playlists, int playlistCount) {
 
 void playlistMenu(Playlist *playlist, Playlist **playlists, int playlistCount) {
     int choice;
-    printf("playlist %s:\n", playlist->name);
+    printf("playlist %s:\n\r", playlist->name);
     while (OP) {
 
         printf("    1. Show Playlist\n");
@@ -404,7 +404,7 @@ void addSong(Playlist *playlist) {
 
     playlist->songs[playlist->songCount] = song;
     playlist->songCount++;
-    printf("Song added successfully!\n");
+
 }
 
 

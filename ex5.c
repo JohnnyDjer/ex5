@@ -4,12 +4,21 @@ ID: 303013098
 Assignment: ex5
 *******************/
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define OP 1
+
+// Define `strdup` for C99 compatibility
+char *strdup(const char *str) {
+    size_t len = strlen(str) + 1;
+    char *copy = (char *)malloc(len);
+    if (copy) {
+        memcpy(copy, str, len);
+    }
+    return copy;
+}
 // Struct Definitions
 typedef struct Song {
     char *title;

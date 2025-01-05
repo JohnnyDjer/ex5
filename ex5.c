@@ -5,7 +5,6 @@ Assignment: ex5
 *******************/
 
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -115,7 +114,7 @@ Playlist *createPlaylist(const char *name) {
 
 void addPlaylist(Playlist ***playlists, int *playlistCount) {
     char name[256];
-    printf("Enter playlist's name: ");
+    printf("Enter playlist's name:\n");
     if (!fgets(name, sizeof(name), stdin)) {
         printf("Failed to read input.\n");
         return;
@@ -289,8 +288,7 @@ void playlistMenu(Playlist *playlist, Playlist **playlists, int playlistCount) {
                 displayPlaylists(playlists, playlistCount);  // Go back to the playlist selection
                 return  ;
 
-            default:
-                printf("Invalid option\n");
+         
         }
     }
 }

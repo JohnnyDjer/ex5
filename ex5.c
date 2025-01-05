@@ -4,7 +4,6 @@ ID: 303013098
 Assignment: ex5
 *******************/
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -121,6 +120,16 @@ void addPlaylist(Playlist ***playlists, int *playlistCount) {
     }
     name[strcspn(name, "\n")] = '\0'; // Remove newline character
 
+
+    // Trim leading and trailing spaces
+    char *trimmed = name;
+    while (*trimmed == ' ') trimmed++; // Skip leading spaces
+    int len = strlen(trimmed);
+    while (len > 0 && trimmed[len - 1] == ' ') {
+        trimmed[len - 1] = '\0'; // Remove trailing spaces
+        len--;
+    }
+
     Playlist **temp = (Playlist **)realloc(*playlists, (*playlistCount + 1) * sizeof(Playlist *));
     if (temp == NULL) {
         printf("Memory allocation failed!\n");
@@ -229,7 +238,7 @@ void playlistMenu(Playlist *playlist, Playlist **playlists, int playlistCount) {
     int choice;
     printf("playlist %s:\n", playlist->name);
     while (OP) {
-        
+
         printf("    1. Show Playlist\n");
         printf("    2. Add Song\n");
         printf("    3. Delete Song\n");

@@ -160,7 +160,18 @@ void removePlaylist(Playlist ***playlists, int *playlistCount) {
 
 void displayPlaylists(Playlist **playlists, int playlistCount) {
     if (playlistCount == 0) {
-        printf("No playlists available.\n");
+        printf("choose an option:\n");
+        printf("1. Back to main menu\n");
+
+        int choice;
+        scanf("%d", &choice);
+        getchar(); // Clear newline
+
+        if (choice == 1) {
+            return; // Back to main menu
+        } else {
+            printf("Invalid option\n");
+        }
         return;
     }
 
@@ -177,7 +188,7 @@ void displayPlaylists(Playlist **playlists, int playlistCount) {
     if (choice == playlistCount + 1) {
         return; // Back to main menu
     } else if (choice >= 1 && choice <= playlistCount) {
-        playlistMenu(playlists[choice - 1],playlists, playlistCount);
+        playlistMenu(playlists[choice - 1], playlists, playlistCount);
     } else {
         printf("Invalid option\n");
     }

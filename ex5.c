@@ -118,13 +118,31 @@ void addPlaylist(Playlist ***playlists, int *playlistCount) {
         printf("Failed to read input.\n");
         return;
     }
-    name[strcspn(name, "\n")] = '\0'; // Remove newline character
-    // You can also remove trailing spaces if needed:
-    while (strlen(name) > 0 && name[strlen(name) - 1] == ' ') {
-        name[strlen(name) - 1] = '\0';  // Remove trailing space
+
+    // Remove the trailing newline and carriage return characters
+    size_t len = strlen(name);
+    if (len > 0 && (name[len - 1] == '\n' || name[len - 1] == '\r')) {
+        name[len - 1] = '\0';  // Remove the last character (either '\n' or '\r')
     }
 
+    // Remove any trailing spaces from the name
+    len = strlen(name);
+    while (len > 0 && name[len - 1] == ' ') {
+        name[len - 1] = '\0'; // Remove the last space
+        len--;
+    }
 
+    // Remove any leading spaces from the name
+    int start = 0;
+    while (name[start] == ' ') {
+        start++;
+    }
+
+    // Create a new name starting from the first non-space character
+    char cleanedName[256];
+    strcpy(cleanedName, &name[start]);
+
+    // Proceed with the playlist creation using cleanedName
     Playlist **temp = (Playlist **)realloc(*playlists, (*playlistCount + 1) * sizeof(Playlist *));
     if (temp == NULL) {
         printf("Memory allocation failed!\n");
@@ -132,7 +150,7 @@ void addPlaylist(Playlist ***playlists, int *playlistCount) {
     }
 
     *playlists = temp;
-    Playlist *newPlaylist = createPlaylist(name);
+    Playlist *newPlaylist = createPlaylist(cleanedName);
     if (newPlaylist == NULL) {
         printf("Failed to create playlist!\n");
         return;

@@ -9,8 +9,7 @@ Assignment: ex5
 #include <stdlib.h>
 #include <string.h>
 
-
-
+#define OP 1
 // Struct Definitions
 typedef struct Song {
     char *title;
@@ -18,6 +17,7 @@ typedef struct Song {
     int year;
     int streams;
     char *lyrics;
+    int index;
 } Song;
 
 typedef struct Playlist {
@@ -25,26 +25,6 @@ typedef struct Playlist {
     Song **songs;
     int songCount;
 } Playlist;
-
-// strdup replacement
-char *strdup(const char *s) {
-    char *copy = malloc(strlen(s) + 1);
-    if (copy) {
-        strcpy(copy, s);
-    }
-    return copy;
-}
-
-// Safe realloc
-void safeRealloc(void **ptr, size_t newSize) {
-    void *temp = realloc(*ptr, newSize);
-    if (!temp) {
-        fprintf(stderr, "Memory allocation failed\n");
-        exit(EXIT_FAILURE);
-    }
-    *ptr = temp;
-}
-
 
 // Function Prototypes
 void mainMenu();
@@ -79,7 +59,7 @@ void mainMenu() {
     int playlistCount = 0;
     int choice;
 
-    while (1) {
+    while (OP) {
         printf("Please Choose:\n");
         printf("    1. Watch playlists\n");
         printf("    2. Add playlist\n");
@@ -123,10 +103,21 @@ void addPlaylist(Playlist ***playlists, int *playlistCount) {
     fgets(name, sizeof(name), stdin);
     name[strcspn(name, "\n")] = '\0';
 
-    *playlists = (Playlist **)realloc(*playlists, (*playlistCount + 1) * sizeof(Playlist *));
-    (*playlists)[*playlistCount] = createPlaylist(name);
-    (*playlistCount)++;
+    Playlist **temp = (Playlist **)realloc(*playlists, (*playlistCount + 1) * sizeof(Playlist *));
+    if (temp == NULL) {
+        printf("Memory allocation failed!\n");
+        return;
+    }
 
+    *playlists = temp;
+    Playlist *newPlaylist = createPlaylist(name);
+    if (newPlaylist == NULL) {
+        printf("Failed to create playlist!\n");
+        return;
+    }
+
+    (*playlists)[*playlistCount] = newPlaylist;
+    (*playlistCount)++;
 }
 
 void removePlaylist(Playlist ***playlists, int *playlistCount) {
@@ -158,8 +149,6 @@ void removePlaylist(Playlist ***playlists, int *playlistCount) {
     printf("Playlist removed successfully.\n");
 }
 
-
-
 void displayPlaylists(Playlist **playlists, int playlistCount) {
     if (playlistCount == 0) {
         printf("No playlists available.\n");
@@ -185,46 +174,16 @@ void displayPlaylists(Playlist **playlists, int playlistCount) {
     }
 }
 
-//display Playlist for the removal
-void displayPlaylistForRemoval(Playlist *playlist) {
-    if (playlist->songCount == 0) {
-        printf("Playlist is empty.\n");
-        return;
-    }
-
-    printf("Playlist: %s\n", playlist->name);
-    for (int i = 0; i < playlist->songCount; i++) {
-        Song *song = playlist->songs[i];
-        printf("%d. Title: %s\n   Artist: %s\n   Released: %d\n   Streams: %d\n",
-               i + 1, song->title, song->artist, song->year, song->streams);
-    }
-
-    int songChoice;
-    printf("choose a song to delete, or 0 to quit: ");
-    scanf("%d", &songChoice);
-    getchar(); // Clear newline
-
-    if (songChoice == 0) {
-        return;  // User chose to quit
-    } else if (songChoice >= 1 && songChoice <= playlist->songCount) {
-        deleteSong(playlist, songChoice - 1);  // Remove the selected song
-    } else {
-        printf("Invalid option\n");
-    }
-}
-
-
 void playlistMenu(Playlist *playlist, Playlist **playlists, int playlistCount) {
     int choice;
-    printf("playlist %s:\n", playlist->name);
-    while (1) {
-
+    while (OP) {
+        printf("playlist %s:\n", playlist->name);
         printf("    1. Show Playlist\n");
         printf("    2. Add Song\n");
         printf("    3. Delete Song\n");
         printf("    4. Sort\n");
         printf("    5. Play\n");
-        printf("    6. exit\n");
+        printf("    6. Back\n");
         scanf("%d", &choice);
         getchar(); // Clear newline
 
@@ -235,16 +194,33 @@ void playlistMenu(Playlist *playlist, Playlist **playlists, int playlistCount) {
                 break;
             case 2:
                 addSong(playlist);
-                break;
+            break;
             case 3:
                 if (playlist->songCount == 0) {
                     printf("No songs to delete.\n");
                 } else {
-                    // Display the current playlist before asking for deletion
-                    displayPlaylistForRemoval(playlist);
+                    printf("Current Playlist:\n");
+                    for (int i = 0; i < playlist->songCount; i++) {
+                        Song *song = playlist->songs[i];
+                        printf("%d. Title: %s\n   Artist: %s\n   Released: %d\n   Streams: %d\n",
+                               i + 1, song->title, song->artist, song->year, song->streams);
+                    }
 
+                    printf("Choose a song to delete, or 0 to quit: ");
+                    int songChoice;
+                    scanf("%d", &songChoice);
+                    getchar(); // Clear newline
+
+                    if (songChoice == 0) {
+                        break; // Exit without deleting
+                    } else if (songChoice >= 1 && songChoice <= playlist->songCount) {
+                        deleteSong(playlist, songChoice - 1); // Perform the deletion
+                    } else {
+                        printf("Invalid option. Please try again.\n");
+                    }
                 }
             break;
+
             case 4:
                 sortPlaylist(playlist);
 
@@ -291,13 +267,13 @@ void addSong(Playlist *playlist) {
     song->year = year;
     song->streams = 0;
     song->lyrics = strdup(lyrics);
+    song->index = playlist->songCount;
 
     playlist->songs = (Song **)realloc(playlist->songs, (playlist->songCount + 1) * sizeof(Song *));
     playlist->songs[playlist->songCount] = song;
     playlist->songCount++;
 
 }
-
 
 void displayPlaylist(Playlist *playlist) {
     if (playlist->songCount == 0) {
@@ -312,8 +288,8 @@ void displayPlaylist(Playlist *playlist) {
     }
 
     int choice;
-    while (1) {
-        printf("choose a song to play, or 0 to quit: ");
+    while (OP) {
+        printf("Choose a song to play, or 0 to quit: ");
         scanf("%d", &choice);
         getchar();
 
@@ -329,7 +305,7 @@ void displayPlaylist(Playlist *playlist) {
 
 void playSong(Song *song) {
     song->streams++;
-    printf("Now playing %s :\n♪ %s ♪\n\n", song->title, song->lyrics);
+    printf("Now playing %s :\n$ %s $\n\n", song->title, song->lyrics);
 }
 
 void deleteSong(Playlist *playlist, int songIndex) {
@@ -343,7 +319,6 @@ void deleteSong(Playlist *playlist, int songIndex) {
     playlist->songs = (Song **)realloc(playlist->songs, playlist->songCount * sizeof(Song *));
     printf("Song deleted successfully.\n");
 }
-
 
 void sortPlaylist(Playlist *playlist) {
     int choice;
@@ -389,14 +364,23 @@ int compareByYear(const void *a, const void *b) {
 int compareByStreamsAsc(const void *a, const void *b) {
     Song *songA = *(Song **)a;
     Song *songB = *(Song **)b;
+
+    if (songA->streams == songB->streams) {
+        return songA->index - songB->index; // Maintain original order
+    }
     return songA->streams - songB->streams;
 }
 
 int compareByStreamsDesc(const void *a, const void *b) {
     Song *songA = *(Song **)a;
     Song *songB = *(Song **)b;
+
+    if (songA->streams == songB->streams) {
+        return songA->index - songB->index; // Maintain original order
+    }
     return songB->streams - songA->streams;
 }
+
 
 int compareByTitle(const void *a, const void *b) {
     Song *songA = *(Song **)a;

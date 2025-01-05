@@ -6,6 +6,8 @@ Assignment: ex5
 
 //LAST VERSION
 
+//LAST VERSION
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -76,8 +78,13 @@ void mainMenu() {
         printf("    2. Add playlist\n");
         printf("    3. Remove playlist\n");
         printf("    4. exit\n");
-        scanf("%d", &choice);
-        getchar(); // Clear newline
+        if (scanf("%d", &choice) != 1) {
+            printf("Invalid input. Please enter a number.\n");
+            while (getchar() != '\n');  // Clear buffer
+            continue;
+        }
+        while (getchar() != '\n');  // Clear leftover characters
+
 
         switch (choice) {
             case 1:
@@ -111,8 +118,11 @@ Playlist *createPlaylist(const char *name) {
 void addPlaylist(Playlist ***playlists, int *playlistCount) {
     char name[256];
     printf("Enter playlist's name: ");
-    fgets(name, sizeof(name), stdin);
-    name[strcspn(name, "\n")] = '\0';
+    if (!fgets(name, sizeof(name), stdin)) {
+        printf("Failed to read input.\n");
+        return;
+    }
+    name[strcspn(name, "\n")] = '\0'; // Remove newline character
 
     Playlist **temp = (Playlist **)realloc(*playlists, (*playlistCount + 1) * sizeof(Playlist *));
     if (temp == NULL) {
@@ -132,32 +142,44 @@ void addPlaylist(Playlist ***playlists, int *playlistCount) {
 }
 
 void removePlaylist(Playlist ***playlists, int *playlistCount) {
-    if (*playlistCount == 0) {
+    while (OP) {
+        displayPlaylists(*playlists, *playlistCount);  // Show playlist menu
 
-        return;
+        if (*playlistCount == 0) {
+
+            return;  // Exit if no playlists exist
+        }
+
+        printf("Choose a playlist to remove: ");
+        int choice;
+        if (scanf("%d", &choice) != 1) {
+            printf("Invalid input. Please enter a number.\n");
+            while (getchar() != '\n');  // Clear buffer
+            continue;  // Restart the loop
+        }
+        getchar();  // Clear newline
+
+        if (choice == *playlistCount + 1) {  // Back to main menu option
+            return;
+        }
+
+        if (choice < 1 || choice > *playlistCount) {  // Invalid option
+            printf("Invalid option. Please try again.\n");
+            continue;  // Restart the loop
+        }
+
+        // Remove the selected playlist
+        int index = choice - 1;
+        freePlaylist((*playlists)[index]);
+
+        for (int i = index; i < *playlistCount - 1; i++) {
+            (*playlists)[i] = (*playlists)[i + 1];
+        }
+
+        (*playlistCount)--;
+        *playlists = (Playlist **)realloc(*playlists, (*playlistCount) * sizeof(Playlist *));
+        printf("Playlist removed successfully.\n");
     }
-
-    displayPlaylists(*playlists, *playlistCount);
-    printf("Choose a playlist to remove: ");
-    int choice;
-    scanf("%d", &choice);
-    getchar(); // Clear newline
-
-    if (choice < 1 || choice > *playlistCount) {
-        printf("Invalid option\n");
-        return;
-    }
-
-    int index = choice - 1;
-    freePlaylist((*playlists)[index]);
-
-    for (int i = index; i < *playlistCount - 1; i++) {
-        (*playlists)[i] = (*playlists)[i + 1];
-    }
-
-    *playlistCount -= 1;
-    *playlists = (Playlist **)realloc(*playlists, *playlistCount * sizeof(Playlist *));
-    printf("Playlist removed successfully.\n");
 }
 
 void displayPlaylists(Playlist **playlists, int playlistCount) {
@@ -168,17 +190,18 @@ void displayPlaylists(Playlist **playlists, int playlistCount) {
         int choice;
         if (scanf("%d", &choice) != 1) {
             printf("Invalid input. Please try again.\n");
-            while (getchar() != '\n'); // Clear input buffer
-            return; // Exit the function and wait for valid input again
+            while (getchar() != '\n');  // Clear input buffer
+            return;  // Exit the function
         }
 
+        while (getchar() != '\n');  // Clear leftover characters
 
         if (choice == 1) {
-            return; // Back to main menu
+            return;  // Back to main menu
         } else {
-            printf("Invalid option\n");
+            printf("Invalid option. Returning to main menu.\n");
+            return;
         }
-        return;
     }
 
     printf("Choose a playlist:\n");
@@ -190,17 +213,18 @@ void displayPlaylists(Playlist **playlists, int playlistCount) {
     int choice;
     if (scanf("%d", &choice) != 1) {
         printf("Invalid input. Please try again.\n");
-        while (getchar() != '\n'); // Clear input buffer
+        while (getchar() != '\n');  // Clear input buffer
         return;
     }
 
+    while (getchar() != '\n');  // Clear leftover characters
 
     if (choice == playlistCount + 1) {
-        return; // Back to main menu
+        return;  // Back to main menu
     } else if (choice >= 1 && choice <= playlistCount) {
         playlistMenu(playlists[choice - 1], playlists, playlistCount);
     } else {
-        printf("Invalid option\n");
+        printf("Invalid option. Returning to main menu.\n");
     }
 }
 

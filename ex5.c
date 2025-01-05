@@ -261,7 +261,7 @@ void playlistMenu(Playlist *playlist, Playlist **playlists, int playlistCount) {
 
        if(scanf("%d", &choice)!=1) {
            getchar(); // Clear newline
-           while(getchar()!='\n');
+           while(getchar()!='\n' && getchar()!='\r');
            continue;
        }
         switch (choice) {

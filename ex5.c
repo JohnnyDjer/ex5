@@ -4,6 +4,8 @@ ID: 303013098
 Assignment: ex5
 *******************/
 
+//LAST VERSION
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -233,10 +235,13 @@ void playlistMenu(Playlist *playlist, Playlist **playlists, int playlistCount) {
         printf("    3. Delete Song\n");
         printf("    4. Sort\n");
         printf("    5. Play\n");
-        printf("    6. Back\n");
-        scanf("%d", &choice);
-        getchar(); // Clear newline
+        printf("    6. exit\n");
 
+       if(scanf("%d", &choice)!=1) {
+           getchar(); // Clear newline
+           while(getchar()!='\n');
+           continue;
+       }
         switch (choice) {
             case 1:
 
@@ -348,7 +353,7 @@ void displayPlaylist(Playlist *playlist) {
         } else if (choice >= 1 && choice <= playlist->songCount) {
             playSong(playlist->songs[choice - 1]);
         } else {
-            
+
         }
     }
 }

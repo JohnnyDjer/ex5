@@ -431,3 +431,4 @@ void cleanup(Playlist **playlists, int playlistCount) {
     }
     free(playlists);
 }
+

@@ -119,16 +119,11 @@ void addPlaylist(Playlist ***playlists, int *playlistCount) {
         return;
     }
     name[strcspn(name, "\n")] = '\0'; // Remove newline character
-
-
-    // Trim leading and trailing spaces
-    char *trimmed = name;
-    while (*trimmed == ' ') trimmed++; // Skip leading spaces
-    int len = strlen(trimmed);
-    while (len > 0 && trimmed[len - 1] == ' ') {
-        trimmed[len - 1] = '\0'; // Remove trailing spaces
-        len--;
+    // You can also remove trailing spaces if needed:
+    while (strlen(name) > 0 && name[strlen(name) - 1] == ' ') {
+        name[strlen(name) - 1] = '\0';  // Remove trailing space
     }
+
 
     Playlist **temp = (Playlist **)realloc(*playlists, (*playlistCount + 1) * sizeof(Playlist *));
     if (temp == NULL) {

@@ -3,7 +3,6 @@ Name: Jonathan Djerassi
 ID: 303013098
 Assignment: ex5
 *******************/
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -213,7 +212,7 @@ void displayPlaylists(Playlist **playlists, int playlistCount) {
             return;  // Exit the function
         }
 
-        while (getchar() != '\n' && getchar() != '\r');  // Clear leftover characters
+        while (getchar() != '\n');  // Clear leftover characters
 
         if (choice == 1) {
             return;  // Back to main menu
@@ -261,7 +260,7 @@ void playlistMenu(Playlist *playlist, Playlist **playlists, int playlistCount) {
 
        if(scanf("%d", &choice)!=1) {
            getchar(); // Clear newline
-           while(getchar()!='\n');
+           while(getchar()!='\n' && getchar() != '\r');
            continue;
        }
         switch (choice) {
@@ -276,7 +275,7 @@ void playlistMenu(Playlist *playlist, Playlist **playlists, int playlistCount) {
                 if (playlist->songCount == 0) {
                     printf("No songs to delete.\n");
                 } else {
-
+                   
                     for (int i = 0; i < playlist->songCount; i++) {
                         Song *song = playlist->songs[i];
                         printf("%d. Title: %s\n   Artist: %s\n   Released: %d\n   Streams: %d\n",

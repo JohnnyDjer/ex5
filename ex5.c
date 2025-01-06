@@ -76,10 +76,10 @@ void mainMenu() {
         printf("    4. exit\n");
         if (scanf("%d", &choice) != 1) {
             printf("Invalid input. Please enter a number.\n");
-            while (getchar() != '\n' && getchar() != '\r');  // Clear buffer
+            while (getchar() != '\n');  // Clear buffer
             continue;
         }
-        while (getchar() != '\n' && getchar() != '\r');  // Clear leftover characters
+        while (getchar() != '\n' && getchar() !='\r');  // Clear leftover characters
 
 
         switch (choice) {

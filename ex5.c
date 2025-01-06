@@ -213,7 +213,7 @@ void displayPlaylists(Playlist **playlists, int playlistCount) {
             return;  // Exit the function
         }
 
-        while (getchar() != '\n');  // Clear leftover characters
+        while (getchar() != '\n' && getchar() != '\r');  // Clear leftover characters
 
         if (choice == 1) {
             return;  // Back to main menu
@@ -249,7 +249,7 @@ void displayPlaylists(Playlist **playlists, int playlistCount) {
 
 void playlistMenu(Playlist *playlist, Playlist **playlists, int playlistCount) {
     int choice;
-    printf("playlist %s:\n\r", playlist->name);
+    printf("playlist %s:\n", playlist->name);
     while (OP) {
 
         printf("    1. Show Playlist\n");
@@ -261,7 +261,7 @@ void playlistMenu(Playlist *playlist, Playlist **playlists, int playlistCount) {
 
        if(scanf("%d", &choice)!=1) {
            getchar(); // Clear newline
-           while(getchar()!='\n' && getchar() !='\r');
+           while(getchar()!='\n');
            continue;
        }
         switch (choice) {
@@ -276,7 +276,7 @@ void playlistMenu(Playlist *playlist, Playlist **playlists, int playlistCount) {
                 if (playlist->songCount == 0) {
                     printf("No songs to delete.\n");
                 } else {
-                    printf("Current Playlist:\n");
+
                     for (int i = 0; i < playlist->songCount; i++) {
                         Song *song = playlist->songs[i];
                         printf("%d. Title: %s\n   Artist: %s\n   Released: %d\n   Streams: %d\n",

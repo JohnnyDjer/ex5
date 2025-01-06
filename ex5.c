@@ -76,10 +76,10 @@ void mainMenu() {
         printf("    4. exit\n");
         if (scanf("%d", &choice) != 1) {
             printf("Invalid input. Please enter a number.\n");
-            while (getchar() != '\n');  // Clear buffer
+            while (getchar() != '\n' && getchar() != '\r');  // Clear buffer
             continue;
         }
-        while (getchar() != '\n');  // Clear leftover characters
+        while (getchar() != '\n' && getchar() != '\r');  // Clear leftover characters
 
 
         switch (choice) {
@@ -261,7 +261,7 @@ void playlistMenu(Playlist *playlist, Playlist **playlists, int playlistCount) {
 
        if(scanf("%d", &choice)!=1) {
            getchar(); // Clear newline
-           while(getchar()!='\n' && getchar()!='\r');
+           while(getchar()!='\n');
            continue;
        }
         switch (choice) {

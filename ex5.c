@@ -8,6 +8,8 @@ Assignment: ex5
 #include <string.h>
 
 #define OP 1
+#define MAX_SIZE_A 256
+#define MAX_SIZE_B 1024
 
 // Define `strdup` for C99 compatibility
 char *strdup(const char *str) {
@@ -75,10 +77,10 @@ void mainMenu() {
         printf("    4. exit\n");
         if (scanf("%d", &choice) != 1) {
             printf("Invalid input. Please enter a number.\n");
-            while (getchar() != '\n');  // Clear buffer
+            //while (getchar() != '\n');  // Clear buffer
             continue;
         }
-        while (getchar() != '\n');  // Clear leftover characters
+       while (getchar() != '\n');  // Clear leftover characters
 
 
         switch (choice) {
@@ -111,7 +113,7 @@ Playlist *createPlaylist(const char *name) {
 }
 
 void addPlaylist(Playlist ***playlists, int *playlistCount) {
-    char name[256];
+    char name[MAX_SIZE_A];
     printf("Enter playlist's name:\n");
     if (!fgets(name, sizeof(name), stdin)) {
         printf("Failed to read input.\n");
@@ -138,7 +140,7 @@ void addPlaylist(Playlist ***playlists, int *playlistCount) {
     }
 
     // Create a new name starting from the first non-space character
-    char cleanedName[256];
+    char cleanedName[MAX_SIZE_A];
     strcpy(cleanedName, &name[start]);
 
     // Proceed with the playlist creation using cleanedName
@@ -160,28 +162,27 @@ void addPlaylist(Playlist ***playlists, int *playlistCount) {
 }
 
 void removePlaylist(Playlist ***playlists, int *playlistCount) {
-    while (OP) {
-        displayPlaylists(*playlists, *playlistCount);  // Show playlist menu
 
         if (*playlistCount == 0) {
-
             return;  // Exit if no playlists exist
         }
 
-        printf("Choose a playlist to remove: ");
+        printf("Choose a playlist to remove:\n");
+    for (int i = 0; i < *playlistCount; i++) {
+        printf("%d. %s\n", i + 1, (*playlists)[i]->name);
+printf("0. Back to the main menu\n");
         int choice;
         if (scanf("%d", &choice) != 1) {
             printf("Invalid input. Please enter a number.\n");
             while (getchar() != '\n');  // Clear buffer
-            continue;  // Restart the loop
+           return;
         }
-        getchar();  // Clear newline
-
-        if (choice == *playlistCount + 1) {  // Back to main menu option
+        if(choice ==0) {
             return;
         }
 
-        if (choice < 1 || choice > *playlistCount) {  // Invalid option
+
+        if (choice < 0 || choice > *playlistCount) {  // Invalid option
             printf("Invalid option. Please try again.\n");
             continue;  // Restart the loop
         }
@@ -317,7 +318,7 @@ void playlistMenu(Playlist *playlist, Playlist **playlists, int playlistCount) {
 
 // Song Functions
 void addSong(Playlist *playlist) {
-    char title[256], artist[256], lyrics[1024];
+    char title[MAX_SIZE_A], artist[MAX_SIZE_A], lyrics[MAX_SIZE_B];
     int year;
 
     // Prompt and read song title

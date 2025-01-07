@@ -208,8 +208,8 @@ void displayPlaylists(Playlist **playlists, int playlistCount) {
         int choice;
         if (scanf("%d", &choice) != 1) {
             printf("Invalid input. Please try again.\n");
-            while (getchar() != '\n');  // Clear input buffer
-            return;  // Exit the function
+            while (getchar() != '\n' || getchar()!='\r');  // Clear input buffer
+            return;  // Exit the function|| getchar()!='\r'
         }
 
         while (getchar() != '\n');  // Clear leftover characters
@@ -260,7 +260,7 @@ void playlistMenu(Playlist *playlist, Playlist **playlists, int playlistCount) {
 
        if(scanf("%d", &choice)!=1) {
            getchar(); // Clear newline
-           while(getchar()!='\n' || getchar()!='\r');
+           while(getchar()!='\n');
            continue;
        }
         switch (choice) {

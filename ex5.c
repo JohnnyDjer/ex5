@@ -212,7 +212,7 @@ void displayPlaylists(Playlist **playlists, int playlistCount) {
             return;  // Exit the function|| getchar()!='\r'
         }
 
-        while (getchar() != '\n');  // Clear leftover characters
+       // while (getchar() != '\n' );  // Clear leftover characters
 
         if (choice == 1) {
             return;  // Back to main menu

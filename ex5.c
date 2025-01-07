@@ -80,8 +80,9 @@ void mainMenu() {
             while (getchar() != '\n');  // Clear buffer
             continue;
         }
-       while (getchar() != '\n');  // Clear leftover characters
-
+       while (getchar() != '\n') {
+           // Clear leftover characters
+       }
 
         switch (choice) {
             case 1:

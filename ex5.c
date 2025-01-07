@@ -208,7 +208,7 @@ void displayPlaylists(Playlist **playlists, int playlistCount) {
         int choice;
         if (scanf("%d", &choice) != 1) {
             printf("Invalid input. Please try again.\n");
-            while (getchar() != '\n\r');  // Clear input buffer
+            while (getchar() != '\n');  // Clear input buffer
             return;  // Exit the function|| getchar()!='\r'
         }
 

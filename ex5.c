@@ -165,8 +165,21 @@ void addPlaylist(Playlist ***playlists, int *playlistCount) {
 void removePlaylist(Playlist ***playlists, int *playlistCount) {
 
     if (*playlistCount == 0) {
+        printf("Choose a playlist:\n");
+        printf("1. Back to main menu\n");
+        int choice;
+        if (scanf("%d", &choice) != 1) {
+            printf("Invalid input. Returning to the main menu.\n");
+            while (getchar() != '\n');  // Clear input buffer
+            return; // Return to main menu if invalid input
+        }
 
-        return; // Exit if no playlists exist
+        if (choice == 1) {
+            return; // Go back to the main menu
+        } else {
+            printf("Invalid option. Returning to the main menu.\n");
+            return; // If invalid choice, return to the main menu
+        }
     }
 
     while (OP) { // Continuous menu

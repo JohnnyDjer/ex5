@@ -175,7 +175,7 @@ void removePlaylist(Playlist ***playlists, int *playlistCount) {
         for (int i = 0; i < *playlistCount; i++) {
             printf("%d. %s\n", i + 1, (*playlists)[i]->name);
         }
-        printf("%d. Back to the main menu\n", *playlistCount + 1);
+        printf("%d. Back to main menu\n", *playlistCount + 1);
 
         // Handle user input
         int choice;

@@ -1,5 +1,5 @@
 /******************
-Name: Jonathan Djerassi    
+Name: Jonathan Djerassi
 ID: 303013098
 Assignment: ex5
 *******************/
@@ -164,28 +164,34 @@ void addPlaylist(Playlist ***playlists, int *playlistCount) {
 
 void removePlaylist(Playlist ***playlists, int *playlistCount) {
 
-        if (*playlistCount == 0) {
-            return;  // Exit if no playlists exist
-        }
+    if (*playlistCount == 0) {
 
+        return; // Exit if no playlists exist
+    }
+
+    while (OP) { // Continuous menu
+        // Display the menu
         printf("Choose a playlist:\n");
-    for (int i = 0; i < *playlistCount; i++) {
-        printf("%d. %s\n", i + 1, (*playlists)[i]->name);
-printf("0. Back to the main menu\n");
+        for (int i = 0; i < *playlistCount; i++) {
+            printf("%d. %s\n", i + 1, (*playlists)[i]->name);
+        }
+        printf("%d. Back to the main menu\n", *playlistCount + 1);
+
+        // Handle user input
         int choice;
         if (scanf("%d", &choice) != 1) {
             printf("Invalid input. Please enter a number.\n");
-            while (getchar() != '\n');  // Clear buffer
-           return;
+            while (getchar() != '\n'); // Clear input buffer
+            continue; // Restart the menu
         }
-        if(choice ==0) {
+
+        if (choice == *playlistCount + 1) { // Back to the main menu
             return;
         }
 
-
-        if (choice < 0 || choice > *playlistCount) {  // Invalid option
+        if (choice < 1 || choice > *playlistCount) { // Invalid option
             printf("Invalid option. Please try again.\n");
-            continue;  // Restart the loop
+            continue; // Restart the menu
         }
 
         // Remove the selected playlist
@@ -199,9 +205,10 @@ printf("0. Back to the main menu\n");
         (*playlistCount)--;
         *playlists = (Playlist **)realloc(*playlists, (*playlistCount) * sizeof(Playlist *));
         printf("Playlist deleted.\n");
+
+        return; // Automatically go back to the main menu
     }
 }
-
 void displayPlaylists(Playlist **playlists, int playlistCount) {
     if (playlistCount == 0) {
         printf("Choose a playlist:\n");
@@ -312,7 +319,7 @@ void playlistMenu(Playlist *playlist, Playlist **playlists, int playlistCount) {
                 displayPlaylists(playlists, playlistCount);  // Go back to the playlist selection
                 return  ;
 
-         
+
         }
     }
 }

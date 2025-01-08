@@ -198,7 +198,7 @@ printf("0. Back to the main menu\n");
 
         (*playlistCount)--;
         *playlists = (Playlist **)realloc(*playlists, (*playlistCount) * sizeof(Playlist *));
-        printf("Playlist deleted\n");
+        printf("Playlist deleted.\n");
     }
 }
 

@@ -168,7 +168,7 @@ void removePlaylist(Playlist ***playlists, int *playlistCount) {
             return;  // Exit if no playlists exist
         }
 
-        printf("Choose a playlist to remove:\n");
+        printf("Choose a playlist:\n");
     for (int i = 0; i < *playlistCount; i++) {
         printf("%d. %s\n", i + 1, (*playlists)[i]->name);
 printf("0. Back to the main menu\n");
@@ -198,7 +198,7 @@ printf("0. Back to the main menu\n");
 
         (*playlistCount)--;
         *playlists = (Playlist **)realloc(*playlists, (*playlistCount) * sizeof(Playlist *));
-        printf("Playlist removed successfully.\n");
+        printf("Playlist deleted\n");
     }
 }
 
@@ -423,7 +423,7 @@ void displayPlaylist(Playlist *playlist) {
 
     int choice;
     while (OP) {
-        printf("Choose a song to play, or 0 to quit:\n");
+        printf("choose a song to play, or 0 to quit:\n");
         scanf("%d", &choice);
         getchar();
 

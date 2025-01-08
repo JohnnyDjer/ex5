@@ -284,7 +284,7 @@ void playlistMenu(Playlist *playlist, Playlist **playlists, int playlistCount) {
                                i + 1, song->title, song->artist, song->year, song->streams);
                     }
 
-                    printf("Choose a song to delete, or 0 to quit:\n");
+                    printf("choose a song to delete, or 0 to quit:\n");
                     int songChoice;
                     scanf("%d", &songChoice);
                     getchar(); // Clear newline
